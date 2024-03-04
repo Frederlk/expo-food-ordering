@@ -3,15 +3,19 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@src/*": ["./src/*"],
       "@app/*": ["./src/app/*"],
+      "@constants": ["./src/constants"],
       "@constants/*": ["./src/constants/*"],
+      "@utils": ["./src/utils"],
+      "@utils/*": ["./src/utils/*"],
       "@components/*": ["./src/components/*"],
       "@hooks/*": ["./src/hooks/*"],
+      "@types": ["./src/types"],
       "@types/*": ["./src/types/*"],
+      "@src/*": ["./src/*"],
       "@assets/*": ["./assets/*"],
       "@data/*": ["./data/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "webpack.config.js"]
 }
