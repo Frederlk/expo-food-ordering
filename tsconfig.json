@@ -12,6 +12,7 @@
       "@hooks/*": ["./src/hooks/*"],
       "@types": ["./src/types"],
       "@types/*": ["./src/types/*"],
+      "@providers/*": ["./src/providers/*"],
       "@src/*": ["./src/*"],
       "@assets/*": ["./assets/*"],
       "@data/*": ["./data/*"]

@@ -16,6 +16,7 @@
     "^@components/(.*)$",
     "^@ui/(.*)$",
     "^@hooks/(.*)$",
+    "^@providers/(.*)$",
     "^@constants",
     "^@types",
     "^@utils",

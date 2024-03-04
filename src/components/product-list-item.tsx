@@ -1,5 +1,5 @@
-import { Link } from 'expo-router';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Link, useSegments } from 'expo-router';
+import { Image, Pressable, StyleSheet, Text } from 'react-native';
 
 import { defaultPizzaImage } from '@src/constants';
 import { Product } from '@src/types';
