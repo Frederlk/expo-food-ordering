@@ -20,7 +20,7 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
         path={cartItem.product.image}
         fallback={defaultPizzaImage}
         resizeMode="contain"
-        className="aspect-squarea mr-[10px] w-[75px] align-middle"
+        className="aspect-squarea mr-[10px] w-[75px] self-center"
       /> */}
 
       <View className="flex-1 ">
