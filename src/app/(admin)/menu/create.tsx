@@ -8,13 +8,11 @@ import { z } from 'zod';
 import Button from '@components/button';
 import { FormTextInput } from '@components/form-text-input';
 
-import { defaultPizzaImage } from '@constants';
+import { FIELD_REQUIRED_STR, defaultPizzaImage } from '@constants';
 
 import { getReadableValidationErrorMessage } from '@utils/forms';
 
-const FIELD_REQUIRED_STR = 'This field is required';
-
-export const signUpFormSchema = z.object({
+const createProductFormSchema = z.object({
   name: z
     .string({
       invalid_type_error: 'Name must be a string',
@@ -37,14 +35,14 @@ export const signUpFormSchema = z.object({
   }),
 });
 
-export type SignUpFormSchema = z.infer<typeof signUpFormSchema>;
+type CreateProductFormSchema = z.infer<typeof createProductFormSchema>;
 
 const CreateProductScreen = () => {
   const { id } = useLocalSearchParams();
   const isUpdating = !!id;
 
-  const methods = useForm<SignUpFormSchema>({
-    resolver: zodResolver(signUpFormSchema),
+  const methods = useForm<CreateProductFormSchema>({
+    resolver: zodResolver(createProductFormSchema),
     mode: 'onBlur',
     defaultValues: {
       image: defaultPizzaImage,
@@ -59,7 +57,7 @@ const CreateProductScreen = () => {
     formState: { isDirty, isValid, isSubmitting },
   } = methods;
 
-  const onSubmit: SubmitHandler<SignUpFormSchema> = (data) => {
+  const onSubmit: SubmitHandler<CreateProductFormSchema> = (data) => {
     if (isUpdating) {
       // update
     } else {
@@ -69,7 +67,7 @@ const CreateProductScreen = () => {
     console.warn(JSON.stringify(data));
   };
 
-  const onError: SubmitErrorHandler<SignUpFormSchema> = (errors, e) => {
+  const onError: SubmitErrorHandler<CreateProductFormSchema> = (errors, e) => {
     console.log(JSON.stringify(errors));
     Alert.alert('Warning', getReadableValidationErrorMessage(errors));
   };
