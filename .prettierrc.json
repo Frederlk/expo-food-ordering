@@ -20,6 +20,7 @@
     "^@constants",
     "^@types",
     "^@utils",
+    "^@lib",
     "^@data",
     "^@assets",
     "^[./]"

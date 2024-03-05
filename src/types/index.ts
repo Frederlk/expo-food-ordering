@@ -51,7 +51,4 @@ export type OrderItem = {
   quantity: number;
 };
 
-export type Profile = {
-  id: string;
-  group: string;
-};
+export type Profile = Tables<'profiles'>;

@@ -12,6 +12,8 @@ import { passwordRegex } from '@constants/regex';
 
 import { getReadableValidationErrorMessage } from '@utils/forms';
 
+import { supabase } from '@lib/supabase';
+
 const signUpFormSchema = z.object({
   email: z
     .string({
@@ -40,7 +42,7 @@ type SignUpFormSchema = z.infer<typeof signUpFormSchema>;
 const SignUpScreen = () => {
   const methods = useForm<SignUpFormSchema>({
     resolver: zodResolver(signUpFormSchema),
-    mode: 'onBlur',
+    mode: 'all',
   });
 
   const {
@@ -49,11 +51,10 @@ const SignUpScreen = () => {
     formState: { isDirty, isValid, isSubmitting },
   } = methods;
 
-  const onSubmit: SubmitHandler<SignUpFormSchema> = (data) => {
-    // const { error } = await supabase.auth.signUp({ email, password });
+  const onSubmit: SubmitHandler<SignUpFormSchema> = async ({ email, password }) => {
+    const { error } = await supabase.auth.signUp({ email, password });
 
-    // if (error) Alert.alert(error.message);
-    console.warn(JSON.stringify(data));
+    if (error) Alert.alert(error.message);
   };
 
   const onError: SubmitErrorHandler<SignUpFormSchema> = (errors, e) => {
