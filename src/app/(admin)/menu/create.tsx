@@ -1,12 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as ImagePicker from 'expo-image-picker';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { Alert, Image, Text, View } from 'react-native';
 import { z } from 'zod';
 
 import Button from '@components/button';
 import { FormTextInput } from '@components/form-text-input';
+
+import {
+  useDeleteProduct,
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+} from '@hooks/useProducts';
 
 import { FIELD_REQUIRED_STR, defaultPizzaImage } from '@constants';
 
@@ -38,14 +45,24 @@ const createProductFormSchema = z.object({
 type CreateProductFormSchema = z.infer<typeof createProductFormSchema>;
 
 const CreateProductScreen = () => {
-  const { id } = useLocalSearchParams();
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === 'string' ? idString : idString?.[0]);
   const isUpdating = !!id;
+
+  const { mutate: insertProduct } = useInsertProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
+  const { data: updatingProduct } = useProduct(id);
+  const { mutate: deleteProduct } = useDeleteProduct();
+
+  const router = useRouter();
 
   const methods = useForm<CreateProductFormSchema>({
     resolver: zodResolver(createProductFormSchema),
     mode: 'onBlur',
     defaultValues: {
-      image: defaultPizzaImage,
+      image: updatingProduct?.image || defaultPizzaImage,
+      price: isUpdating ? updatingProduct?.price.toString() : '',
+      name: isUpdating ? updatingProduct?.name : '',
     },
   });
 
@@ -57,23 +74,12 @@ const CreateProductScreen = () => {
     formState: { isDirty, isValid, isSubmitting },
   } = methods;
 
-  const onSubmit: SubmitHandler<CreateProductFormSchema> = (data) => {
-    if (isUpdating) {
-      // update
-    } else {
-      // create
-    }
-
-    console.warn(JSON.stringify(data));
-  };
-
-  const onError: SubmitErrorHandler<CreateProductFormSchema> = (errors, e) => {
-    console.log(JSON.stringify(errors));
-    Alert.alert('Warning', getReadableValidationErrorMessage(errors));
-  };
-
   const onDelete = () => {
-    console.warn('DELETE');
+    deleteProduct(id, {
+      onSuccess: () => {
+        router.push('/(admin)/menu');
+      },
+    });
   };
 
   const confirmDelete = () => {
@@ -90,8 +96,7 @@ const CreateProductScreen = () => {
   };
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 4],
@@ -105,6 +110,33 @@ const CreateProductScreen = () => {
     }
   };
   const image = getValues('image');
+
+  const onSubmit: SubmitHandler<CreateProductFormSchema> = async ({ image, name, price }) => {
+    if (isUpdating) {
+      updateProduct(
+        { id, name, price: parseFloat(price), image },
+        {
+          onSuccess: () => {
+            router.back();
+          },
+        },
+      );
+    } else {
+      insertProduct(
+        { name, price: parseFloat(price), image },
+        {
+          onSuccess: () => {
+            router.back();
+          },
+        },
+      );
+    }
+  };
+
+  const onError: SubmitErrorHandler<CreateProductFormSchema> = (errors, e) => {
+    console.log(JSON.stringify(errors));
+    Alert.alert('Warning', getReadableValidationErrorMessage(errors));
+  };
 
   return (
     <FormProvider {...methods}>

@@ -1,7 +1,8 @@
 import { Session } from '@supabase/supabase-js';
+import { useQuery } from '@tanstack/react-query';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 
-import { Profile, Tables } from '@types';
+import { Profile } from '@types';
 
 import { supabase } from '@lib/supabase';
 
@@ -26,10 +27,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const fetchSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
       setSession(session);
 
       if (session) {

@@ -1,11 +1,14 @@
+import { PostgrestError } from '@supabase/supabase-js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { Product } from '@types';
 
 import { supabase } from '@lib/supabase';
 
 export const PRODUCTS_QUERY_KEY = 'products';
 
 export const useProductList = () => {
-  return useQuery({
+  return useQuery<Product[], PostgrestError>({
     queryKey: [PRODUCTS_QUERY_KEY],
     queryFn: async () => {
       const { data, error } = await supabase.from(PRODUCTS_QUERY_KEY).select('*');
@@ -18,8 +21,9 @@ export const useProductList = () => {
 };
 
 export const useProduct = (id: number) => {
-  return useQuery({
+  return useQuery<Product, PostgrestError>({
     queryKey: [PRODUCTS_QUERY_KEY, id],
+    enabled: !!id,
     queryFn: async () => {
       const { data, error } = await supabase
         .from(PRODUCTS_QUERY_KEY)
@@ -35,11 +39,13 @@ export const useProduct = (id: number) => {
   });
 };
 
+type InsertProductRequestData = Omit<Product, 'created_at' | 'id'>;
+
 export const useInsertProduct = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    async mutationFn(data: any) {
+  return useMutation<Product, PostgrestError, InsertProductRequestData>({
+    async mutationFn(data: InsertProductRequestData) {
       const { error, data: newProduct } = await supabase
         .from(PRODUCTS_QUERY_KEY)
         .insert({
@@ -52,6 +58,7 @@ export const useInsertProduct = () => {
       if (error) {
         throw new Error(error.message);
       }
+
       return newProduct;
     },
     async onSuccess() {
@@ -60,11 +67,13 @@ export const useInsertProduct = () => {
   });
 };
 
+type UpdateProductRequestData = Omit<Product, 'created_at'>;
+
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    async mutationFn(data: any) {
+  return useMutation<Product, PostgrestError, UpdateProductRequestData>({
+    async mutationFn(data: UpdateProductRequestData) {
       const { error, data: updatedProduct } = await supabase
         .from(PRODUCTS_QUERY_KEY)
         .update({

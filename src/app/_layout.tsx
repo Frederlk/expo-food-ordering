@@ -58,8 +58,8 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-        <QueryProvider>
+      <QueryProvider>
+        <AuthProvider>
           <CartProvider>
             <Stack>
               <Stack.Screen name="(admin)" options={{ headerShown: false }} />
@@ -68,8 +68,8 @@ function RootLayoutNav() {
               <Stack.Screen name="cart" options={{ presentation: 'modal' }} />
             </Stack>
           </CartProvider>
-        </QueryProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </QueryProvider>
     </ThemeProvider>
   );
 }
