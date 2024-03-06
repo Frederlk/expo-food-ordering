@@ -2,7 +2,7 @@ import { Session } from '@supabase/supabase-js';
 import { useQuery } from '@tanstack/react-query';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 
-import { Profile } from '@types';
+import { Profile } from '@customTypes';
 
 import { supabase } from '@lib/supabase';
 
@@ -26,11 +26,8 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchSession = async () => {
-      setSession(session);
-
+    supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session) {
-        // fetch profile
         const { data } = await supabase
           .from('profiles')
           .select('*')
@@ -39,14 +36,9 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
         setProfile(data || null);
       }
-
-      setLoading(false);
-    };
-
-    fetchSession();
-    supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+    setLoading(false);
   }, []);
 
   return (

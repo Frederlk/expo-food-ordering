@@ -13,8 +13,10 @@ type OrderListItemProps = {
 };
 
 const OrderListItem = ({ order }: OrderListItemProps) => {
+  const segments = useSegments();
+
   return (
-    <Link href={`./orders/${order.id}`} asChild>
+    <Link href={`/${segments[0]}/orders/${order.id}`} asChild>
       <Pressable className="flex-row items-center justify-between rounded-[10px] bg-white p-[10px]">
         <View>
           <Text className="my-[5px] font-bold">Order #{order.id}</Text>

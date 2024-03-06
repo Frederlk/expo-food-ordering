@@ -18,7 +18,7 @@
     "^@hooks/(.*)$",
     "^@providers/(.*)$",
     "^@constants",
-    "^@types",
+    "^@customTypes",
     "^@utils",
     "^@lib",
     "^@data",

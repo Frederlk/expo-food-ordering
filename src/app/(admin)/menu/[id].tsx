@@ -2,6 +2,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Link, Stack, useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, Image, Pressable, Text, View } from 'react-native';
 
+import RemoteImage from '@components/remote-image';
+
 import { useProduct } from '@hooks/useProducts';
 
 import { defaultPizzaImage } from '@constants';
@@ -42,9 +44,9 @@ const ProductDetailsScreen = () => {
         }}
       />
 
-      <Image
-        source={{ uri: product?.image || defaultPizzaImage }}
-        alt={product?.name}
+      <RemoteImage
+        path={product?.image}
+        fallback={defaultPizzaImage}
         className="aspect-square w-full"
         resizeMode="contain"
       />

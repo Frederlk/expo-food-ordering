@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, Text, View } from 'react-native';
 
 import Button from '@components/button';
+import RemoteImage from '@components/remote-image';
 
 import { useProduct } from '@hooks/useProducts';
 
@@ -10,7 +11,7 @@ import { useCart } from '@providers/cart-provider';
 
 import { defaultPizzaImage, sizes } from '@constants';
 
-import { PizzaSize } from '@types';
+import { PizzaSize } from '@customTypes';
 
 import { cn } from '@utils';
 
@@ -37,17 +38,18 @@ const ProductDetailsScreen = () => {
     return <ActivityIndicator />;
   }
 
-  if (error) {
+  if (error || !product) {
     return <Text>Failed to fetch products</Text>;
   }
 
   return (
     <View className="flex-1 bg-white p-[10px]">
-      <Stack.Screen options={{ title: product?.name }} />
-      <Image
-        source={{ uri: product?.image || defaultPizzaImage }}
-        alt={product?.name}
+      <Stack.Screen options={{ title: product.name }} />
+
+      <RemoteImage
+        path={product?.image}
         className="aspect-square w-full"
+        fallback={defaultPizzaImage}
         resizeMode="contain"
       />
 
@@ -75,7 +77,7 @@ const ProductDetailsScreen = () => {
         ))}
       </View>
 
-      <Text className="mt-auto text-[18px] font-bold">${product?.price}</Text>
+      <Text className="mt-auto text-[18px] font-bold">${product.price}</Text>
       <Button onPress={addToCart} text="Add to cart" />
     </View>
   );

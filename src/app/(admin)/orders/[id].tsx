@@ -1,37 +1,43 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 
+import OrderItemListItem from '@components/order-item-list-item';
+import OrderListItem from '@components/order-list-item';
+
+import { useOrderDetails, useUpdateOrder } from '@hooks/useOrders';
+
+import { OrderStatusList } from '@customTypes';
+
 import { cn } from '@utils';
 
 export default function OrderDetailsScreen() {
   const { id: idString } = useLocalSearchParams();
   const id = parseFloat(typeof idString === 'string' ? idString : idString[0]);
 
-  // const { data: order, isLoading, error } = useOrderDetails(id);
-  // const { mutate: updateOrder } = useUpdateOrder();
+  const { data: order, isLoading, error } = useOrderDetails(id);
+  const { mutate: updateOrder } = useUpdateOrder();
 
-  // const updateStatus = async (status: string) => {
-  //   await updateOrder({
-  //     id: id,
-  //     updatedFields: { status },
-  //   });
-  //   if (order) {
-  //     await notifyUserAboutOrderUpdate({ ...order, status });
-  //   }
-  // };
+  const updateStatus = async (status: string) => {
+    await updateOrder({
+      id: id,
+      updatedFields: { status },
+    });
+    // if (order) {
+    //   await notifyUserAboutOrderUpdate({ ...order, status });
+    // }
+  };
 
-  // if (isLoading) {
-  //   return <ActivityIndicator />;
-  // }
-  // if (error || !order) {
-  //   return <Text>Failed to fetch</Text>;
-  // }
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+  if (error || !order) {
+    return <Text>Failed to fetch</Text>;
+  }
 
   return (
     <View className="flex-1 gap-[20px] p-[10px]">
       <Stack.Screen options={{ title: `Order #${id}` }} />
-
-      {/* <FlatList
+      <FlatList
         data={order.order_items}
         className="gap-[10px]"
         renderItem={({ item }) => <OrderItemListItem item={item} />}
@@ -57,7 +63,7 @@ export default function OrderDetailsScreen() {
             </View>
           </>
         )}
-      /> */}
+      />
     </View>
   );
 }

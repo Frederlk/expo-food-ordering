@@ -2,7 +2,10 @@ import { randomUUID } from 'expo-crypto';
 import { useRouter } from 'expo-router';
 import { PropsWithChildren, createContext, useContext, useState } from 'react';
 
-import { CartItem, Tables } from '@types';
+import { useInsertOrderItems } from '@hooks/useOrderItems';
+import { useInsertOrder } from '@hooks/useOrders';
+
+import { CartItem, Tables } from '@customTypes';
 
 type Product = Tables<'products'>;
 
@@ -25,9 +28,13 @@ const CartContext = createContext<CartType>({
 const CartProvider = ({ children }: PropsWithChildren) => {
   const [items, setItems] = useState<CartItem[]>([]);
 
+  const { mutate: insertOrder } = useInsertOrder();
+  const { mutate: insertOrderItems } = useInsertOrderItems();
+
   const router = useRouter();
 
   const addItem = (product: Product, size: CartItem['size']) => {
+    // if already in cart, increment quantity
     const existingItem = items.find((item) => item.product === product && item.size === size);
 
     if (existingItem) {
@@ -36,7 +43,7 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     }
 
     const newCartItem: CartItem = {
-      id: randomUUID(),
+      id: randomUUID(), // generate
       product,
       product_id: product.id,
       size,
@@ -46,17 +53,11 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     setItems([newCartItem, ...items]);
   };
 
+  // updateQuantity
   const updateQuantity = (itemId: string, amount: -1 | 1) => {
     setItems(
       items
-        .map((item) =>
-          item.id !== itemId
-            ? item
-            : {
-                ...item,
-                quantity: item.quantity + amount,
-              },
-        )
+        .map((item) => (item.id !== itemId ? item : { ...item, quantity: item.quantity + amount }))
         .filter((item) => item.quantity > 0),
     );
   };
@@ -67,8 +68,39 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     setItems([]);
   };
 
+  const checkout = async () => {
+    // await initialisePaymentSheet(Math.floor(total * 100));
+    // const payed = await openPaymentSheet();
+    // if (!payed) {
+    //   return;
+    // }
+
+    insertOrder(
+      { total },
+      {
+        onSuccess: saveOrderItems,
+      },
+    );
+  };
+
+  const saveOrderItems = (order: Tables<'orders'>) => {
+    const orderItems = items.map((cartItem) => ({
+      order_id: order.id,
+      product_id: cartItem.product_id,
+      quantity: cartItem.quantity,
+      size: cartItem.size,
+    }));
+
+    insertOrderItems(orderItems, {
+      onSuccess() {
+        clearCart();
+        router.push(`/(user)/orders/${order.id}`);
+      },
+    });
+  };
+
   return (
-    <CartContext.Provider value={{ items, addItem, updateQuantity, total, checkout: clearCart }}>
+    <CartContext.Provider value={{ items, addItem, updateQuantity, total, checkout }}>
       {children}
     </CartContext.Provider>
   );

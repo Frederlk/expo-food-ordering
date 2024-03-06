@@ -1,11 +1,13 @@
 import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { useCart } from '@providers/cart-provider';
 
 import { defaultPizzaImage } from '@constants';
 
-import { CartItem } from '@types';
+import { CartItem } from '@customTypes';
+
+import RemoteImage from './remote-image';
 
 type CartListItemProps = {
   cartItem: CartItem;
@@ -16,12 +18,12 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
 
   return (
     <View className="flex-1 flex-row items-center rounded-[10px] bg-white p-[5px]">
-      {/* <RemoteImage
+      <RemoteImage
         path={cartItem.product.image}
         fallback={defaultPizzaImage}
         resizeMode="contain"
-        className="aspect-squarea mr-[10px] w-[75px] self-center"
-      /> */}
+        className="mr-[10px] aspect-square w-[75px] self-center"
+      />
 
       <View className="flex-1 ">
         <Text className="mb-[5px] text-[16px] font-medium">{cartItem.product.name}</Text>

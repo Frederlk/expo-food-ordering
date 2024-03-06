@@ -1,4 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { decode } from 'base64-arraybuffer';
+import { randomUUID } from 'expo-crypto';
+import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
@@ -17,7 +20,11 @@ import {
 
 import { FIELD_REQUIRED_STR, defaultPizzaImage } from '@constants';
 
+import { Product } from '@customTypes';
+
 import { getReadableValidationErrorMessage } from '@utils/forms';
+
+import { supabase } from '@lib/supabase';
 
 const createProductFormSchema = z.object({
   name: z
@@ -77,7 +84,7 @@ const CreateProductScreen = () => {
   const onDelete = () => {
     deleteProduct(id, {
       onSuccess: () => {
-        router.push('/(admin)/menu');
+        router.replace('/(admin)/menu');
       },
     });
   };
@@ -111,10 +118,34 @@ const CreateProductScreen = () => {
   };
   const image = getValues('image');
 
-  const onSubmit: SubmitHandler<CreateProductFormSchema> = async ({ image, name, price }) => {
+  const uploadImage = async () => {
+    if (!image?.startsWith('file://')) {
+      return;
+    }
+
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: 'base64',
+    });
+    const filePath = `${randomUUID()}.png`;
+    const contentType = 'image/png';
+
+    const { data, error } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, decode(base64), { contentType });
+
+    console.log(error);
+
+    if (data) {
+      return data.path;
+    }
+  };
+
+  const onSubmit: SubmitHandler<CreateProductFormSchema> = async ({ name, price }) => {
+    const imagePath = await uploadImage();
+
     if (isUpdating) {
       updateProduct(
-        { id, name, price: parseFloat(price), image },
+        { id, name, price: parseFloat(price), image: imagePath },
         {
           onSuccess: () => {
             router.back();
@@ -123,7 +154,7 @@ const CreateProductScreen = () => {
       );
     } else {
       insertProduct(
-        { name, price: parseFloat(price), image },
+        { name, price: parseFloat(price), image: imagePath },
         {
           onSuccess: () => {
             router.back();

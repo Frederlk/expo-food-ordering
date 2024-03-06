@@ -1,4 +1,4 @@
-import { Product, Tables } from '@types';
+import { Tables } from '@customTypes';
 
 const products: Tables<'products'>[] = [
   {

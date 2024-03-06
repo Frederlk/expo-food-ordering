@@ -1,7 +1,7 @@
 import { PostgrestError } from '@supabase/supabase-js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { Product } from '@types';
+import { InsertTables, Product, UpdateTables } from '@customTypes';
 
 import { supabase } from '@lib/supabase';
 
@@ -21,7 +21,7 @@ export const useProductList = () => {
 };
 
 export const useProduct = (id: number) => {
-  return useQuery<Product, PostgrestError>({
+  return useQuery({
     queryKey: [PRODUCTS_QUERY_KEY, id],
     enabled: !!id,
     queryFn: async () => {
@@ -39,13 +39,11 @@ export const useProduct = (id: number) => {
   });
 };
 
-type InsertProductRequestData = Omit<Product, 'created_at' | 'id'>;
-
 export const useInsertProduct = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Product, PostgrestError, InsertProductRequestData>({
-    async mutationFn(data: InsertProductRequestData) {
+  return useMutation({
+    async mutationFn(data: InsertTables<'products'>) {
       const { error, data: newProduct } = await supabase
         .from(PRODUCTS_QUERY_KEY)
         .insert({
@@ -67,12 +65,12 @@ export const useInsertProduct = () => {
   });
 };
 
-type UpdateProductRequestData = Omit<Product, 'created_at'>;
+type UpdateProductRequestData = UpdateTables<'products'>;
 
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Product, PostgrestError, UpdateProductRequestData>({
+  return useMutation({
     async mutationFn(data: UpdateProductRequestData) {
       const { error, data: updatedProduct } = await supabase
         .from(PRODUCTS_QUERY_KEY)
@@ -81,7 +79,7 @@ export const useUpdateProduct = () => {
           image: data.image,
           price: data.price,
         })
-        .eq('id', data.id)
+        .eq('id', data.id || '')
         .select()
         .single();
 
