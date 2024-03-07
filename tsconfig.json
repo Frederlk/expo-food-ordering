@@ -17,8 +17,15 @@
       "@lib/*": ["./src/lib/*"],
       "@providers/*": ["./src/providers/*"],
       "@src/*": ["./src/*"],
-      "@assets/*": ["./assets/*"],
+      "@assets/*": ["./assets/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "webpack.config.js"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "webpack.config.js",
+    "supabase/functions/_utils"
+  ]
 }
