@@ -11,6 +11,7 @@ import { useColorScheme } from '@hooks/useColorScheme';
 
 import AuthProvider from '@providers/auth-provider';
 import CartProvider from '@providers/cart-provider';
+import NotificationProvider from '@providers/notification-provider';
 import QueryProvider from '@providers/query-provider';
 
 NativeWindStyleSheet.setOutput({
@@ -62,14 +63,16 @@ function RootLayoutNav() {
       <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''}>
         <QueryProvider>
           <AuthProvider>
-            <CartProvider>
-              <Stack>
-                <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-                <Stack.Screen name="(user)" options={{ headerShown: false }} />
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="cart" options={{ presentation: 'modal' }} />
-              </Stack>
-            </CartProvider>
+            <NotificationProvider>
+              <CartProvider>
+                <Stack>
+                  <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(user)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                  <Stack.Screen name="cart" options={{ presentation: 'modal' }} />
+                </Stack>
+              </CartProvider>
+            </NotificationProvider>
           </AuthProvider>
         </QueryProvider>
       </StripeProvider>
