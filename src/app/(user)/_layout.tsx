@@ -1,12 +1,14 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Redirect, Tabs } from 'expo-router';
-
-import { useColorScheme } from '@src/hooks/useColorScheme';
+import { useColorScheme } from 'react-native';
 
 import { useAuth } from '@providers/auth-provider';
 
-import Colors from '@constants/colors';
+import colors from '@constants/colors';
 
+/**
+ * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+ */
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
@@ -25,10 +27,10 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: colors[colorScheme ?? 'light'].tint,
       }}
     >
-      <Tabs.Screen name="index" options={{ href: null, title: 'Home', headerShown: false }} />
+      <Tabs.Screen name="index" options={{ href: null }} />
 
       <Tabs.Screen
         name="menu"
@@ -38,7 +40,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="cutlery" color={color} />,
         }}
       />
-
       <Tabs.Screen
         name="orders"
         options={{

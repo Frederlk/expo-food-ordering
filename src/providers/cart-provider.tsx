@@ -1,11 +1,14 @@
 import { randomUUID } from 'expo-crypto';
 import { useRouter } from 'expo-router';
 import { PropsWithChildren, createContext, useContext, useState } from 'react';
+import { Alert } from 'react-native';
 
 import { useInsertOrderItems } from '@hooks/useOrderItems';
 import { useInsertOrder } from '@hooks/useOrders';
 
 import { CartItem, Tables } from '@customTypes';
+
+import { initialisePaymentSheet, openPaymentSheet } from '@lib/stripe';
 
 type Product = Tables<'products'>;
 
@@ -69,18 +72,23 @@ const CartProvider = ({ children }: PropsWithChildren) => {
   };
 
   const checkout = async () => {
-    // await initialisePaymentSheet(Math.floor(total * 100));
-    // const payed = await openPaymentSheet();
-    // if (!payed) {
-    //   return;
-    // }
+    try {
+      await initialisePaymentSheet(Math.floor(total * 100));
 
-    insertOrder(
-      { total },
-      {
-        onSuccess: saveOrderItems,
-      },
-    );
+      const payed = await openPaymentSheet();
+      if (!payed) {
+        return Alert.alert('Something went wrong');
+      }
+
+      insertOrder(
+        { total },
+        {
+          onSuccess: saveOrderItems,
+        },
+      );
+    } catch (error) {
+      return Alert.alert('Something went wrong');
+    }
   };
 
   const saveOrderItems = (order: Tables<'orders'>) => {
