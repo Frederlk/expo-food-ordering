@@ -21,7 +21,6 @@
     "^@customTypes",
     "^@utils",
     "^@lib",
-    "^@data",
     "^@assets",
     "^[./]"
   ]

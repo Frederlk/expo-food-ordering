@@ -18,7 +18,6 @@
       "@providers/*": ["./src/providers/*"],
       "@src/*": ["./src/*"],
       "@assets/*": ["./assets/*"],
-      "@data/*": ["./data/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "webpack.config.js"]
