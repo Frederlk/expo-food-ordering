@@ -37,7 +37,7 @@ export const FormTextInput = <T extends FieldValues>({
           autoCapitalize="none"
           onBlur={onBlur}
           value={value}
-          onChangeText={onChange}
+          onChangelabel={onChange}
           {...props}
         />
 

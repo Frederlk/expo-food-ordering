@@ -1,9 +1,10 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Image, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 
-import Button from '@components/button';
 import RemoteImage from '@components/remote-image';
+import { Button } from '@components/ui/button';
+import { Text } from '@components/ui/text';
 
 import { useProduct } from '@hooks/useProducts';
 
@@ -77,8 +78,10 @@ const ProductDetailsScreen = () => {
         ))}
       </View>
 
-      <Text className="mt-auto text-[18px] font-bold">${product.price}</Text>
-      <Button onPress={addToCart} text="Add to cart" />
+      <Text className="native: mt-auto text-[18px] font-bold">${product.price}</Text>
+      <Button onPress={addToCart}>
+        <Text>Add to cart</Text>
+      </Button>
     </View>
   );
 };

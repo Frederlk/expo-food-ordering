@@ -8,8 +8,8 @@ import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from 'react-
 import { Alert, Image, Text, View } from 'react-native';
 import { z } from 'zod';
 
-import Button from '@components/button';
 import { FormTextInput } from '@components/form-text-input';
+import { Button } from '@components/ui/button';
 
 import {
   useDeleteProduct,
@@ -190,14 +190,14 @@ const CreateProductScreen = () => {
         />
 
         <Button
-          text={isUpdating ? 'Update' : 'Create'}
+          label={isUpdating ? 'Update' : 'Create'}
           disabled={!(isValid && isDirty) || isSubmitting}
           className="mt-[20px]"
           onPress={handleSubmit(onSubmit, onError)}
         />
         {isUpdating && (
           <Button
-            text="Delete"
+            label="Delete"
             disabled={isSubmitting}
             className="mt-[20px]"
             onPress={confirmDelete}

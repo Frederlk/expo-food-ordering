@@ -16,6 +16,7 @@
       "@lib": ["./src/lib"],
       "@lib/*": ["./src/lib/*"],
       "@providers/*": ["./src/providers/*"],
+      "@styles/*": ["./src/styles/*"],
       "@src/*": ["./src/*"],
       "@assets/*": ["./assets/*"]
     }
@@ -25,6 +26,8 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
+    "nativewind-env.d.ts.ts",
+    "globals.d.ts",
     "webpack.config.js",
     "supabase/functions/_utils"
   ]

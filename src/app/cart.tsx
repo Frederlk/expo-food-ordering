@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { FlatList, Platform, Text, View } from 'react-native';
 
-import Button from '@components/button';
 import CartListItem from '@components/cart-list-item';
+import { Button } from '@components/ui/button';
 
 import { useCart } from '@providers/cart-provider';
 
@@ -18,7 +18,7 @@ const CartScreen = () => {
       />
 
       <Text className="mt-auto text-[20px] font-medium">Total: ${total}</Text>
-      <Button onPress={checkout} text="Checkout" />
+      <Button onPress={checkout} label="Checkout" />
 
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>

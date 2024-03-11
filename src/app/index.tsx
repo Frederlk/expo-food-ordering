@@ -2,7 +2,8 @@ import { Link, Redirect, useRouter } from 'expo-router';
 import { Alert, View } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 
-import Button from '@components/button';
+import { Button } from '@components/ui/button';
+import { Text } from '@components/ui/text';
 
 import { useAuth } from '@providers/auth-provider';
 
@@ -37,13 +38,19 @@ const index = () => {
   return (
     <View className="flex-1 justify-center p-[10px]">
       <Link href={'/(user)'} asChild>
-        <Button text="User" />
+        <Button>
+          <Text>User</Text>
+        </Button>
       </Link>
       <Link href={'/(admin)'} asChild>
-        <Button text="Admin" />
+        <Button>
+          <Text>Admin</Text>
+        </Button>
       </Link>
 
-      <Button onPress={onSignOut()} text="Sign out" />
+      <Button onPress={onSignOut()}>
+        <Text>Sign Out</Text>
+      </Button>
     </View>
   );
 };

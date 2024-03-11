@@ -4,8 +4,8 @@ import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { Alert, View } from 'react-native';
 import { z } from 'zod';
 
-import Button from '@components/button';
 import { FormTextInput } from '@components/form-text-input';
+import { Button } from '@components/ui/button';
 
 import { FIELD_REQUIRED_STR } from '@constants';
 import { passwordRegex } from '@constants/regex';
@@ -79,7 +79,7 @@ const SignUpScreen = () => {
       <Button
         disabled={!(isValid && isDirty) || isSubmitting}
         onPress={handleSubmit(onSubmit, onError)}
-        text={isSubmitting ? 'Creating account...' : 'Create account'}
+        label={isSubmitting ? 'Creating account...' : 'Create account'}
       />
 
       <Link href="/sign-in" className="my-[10px] self-center font-bold text-blue-400">
